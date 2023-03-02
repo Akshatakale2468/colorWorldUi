@@ -1,0 +1,223 @@
+<div class="row mt-2">
+    <div class="col-md-12" *ngIf="isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Purchase</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAddForm()">Add</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Dealer Name</th>
+                                    <th>Purchase Date</th>
+                                    <th>Total Items</th>
+                                    <th>Total Invoice Amt.</th>
+                                    <th>Invoice No.</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="purchaseArray.length == 0">
+                                <tr>
+                                    <td colspan="6" class="text-center">No Record Found</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="purchaseArray.length !==0">
+                                <tbody>
+                                    <tr *ngFor="let data of purchaseArray; let no=index">
+                                        <td>{{no+1}}</td>
+                                        <td>{{data.dealerName | titlecase}}</td>
+                                        <td>{{data.purchaseDate | date: "dd-MMM-yy"}}</td>
+                                        <td>{{data.totalItems}}</td>
+                                        <td>{{data.toalInvoiceAmt | currency : 'INR'}}</td>
+                                        <td>{{data.invoiceNo}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary me-2"
+                                                (click)="onOpen(data.purchaseId)">Open</button>
+                                            <button class="btn btn-sm btn-danger"
+                                                (click)="onDelete(data.purchaseId,purchaseObj)">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Purchase</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <form #form="ngForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="">Dealer Name <span class="text-danger">*</span></label>
+                                            <select name="dealerName" id="" [(ngModel)]="purchaseObj.dealerId"
+                                                class="form-control">
+                                                <option value="" *ngFor="let data of dealerArray"
+                                                    [value]="data.dealerId">
+                                                    {{data.dealerName}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-6">
+                                            <label for="">Purchase Date <span class="text-danger">*</span> </label>
+                                            <input type="date" name="PurchaseDate" id="purchaseDate"
+                                                class="form-control" [(ngModel)]="purchaseObj.purchaseDate" required
+                                                #purDate="ngModel">
+                                            <div class="text-dager" *ngIf="purDate.touched">
+                                                <span *ngIf="purDate.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="">Total Items <span class="text-danger">*</span> </label>
+                                            <input type="text" name="TotalItems" id="" class="form-control" disabled
+                                                [(ngModel)]="purchaseObj.totalItems" required #totalItems="ngModel">
+                                            <div class="text-danger" *ngIf="totalItems.touched">
+                                                <span *ngIf="totalItems.errors?.['required']">This is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-6">
+                                            <label for="">Toal Invoice Amt.<span class="text-danger">*</span></label>
+                                            <input type="text" name="ToalInvoiceAmt" id="" class="form-control"
+                                                [(ngModel)]="purchaseObj.toalInvoiceAmt" required
+                                                #toalInvoiceAmt="ngModel">
+                                            <div class="text-danger" *ngIf="toalInvoiceAmt.touched">
+                                                <span *ngIf="toalInvoiceAmt.errors?.['required']">Total Invoice Amountis
+                                                    Required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            <label for="">Invoice No.<span class="text-danger">*</span> </label>
+                                            <input type="text" name="InvoiceNo" id="" class="form-control"
+                                                [(ngModel)]="purchaseObj.invoiceNo" required #invoiceNo="ngModel">
+                                            <div class="text-danger" *ngIf="invoiceNo.touched">
+                                                <span *ngIf="invoiceNo.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <form #frm="ngForm">
+                                    <div class="row mt-3" *ngIf="isShow">
+                                        <div class="col-md-4">
+                                            <label for="">Expiry Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="ExpiryDate" id="" class="form-control"
+                                                [(ngModel)]="purchaseItemObj.expiryDate" required #expiryDate="ngModel">
+                                            <div class="text-danger" *ngIf="expiryDate.touched">
+                                                <span *ngIf="expiryDate.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Item Name <span class="text-danger">*</span></label>
+                                            <select class="form-control" [(ngModel)]="purchaseItemObj.itemId"
+                                                name="itemName">
+                                                <option *ngFor="let data of itemList" [value]="data.itemId">
+                                                    {{data.itemName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Quantity <span class="text-danger">*</span></label>
+                                            <input type="number" name="Quantity" id="" class="form-control"
+                                                [(ngModel)]="purchaseItemObj.quantity" required #quantity="ngModel">
+                                            <div class="text-danger" *ngIf="quantity.touched">
+                                                <span *ngIf="quantity.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 mb-3" *ngIf="isShow">
+                                        <div class="col-md-4">
+                                            <label for="">Rate Received<span class="text-danger">*</span> </label>
+                                            <input type="number" name="RateReceived" id="" class="form-control"
+                                                [(ngModel)]="purchaseItemObj.rateReceived" required #rate="ngModel">
+                                            <div class="text-danger" *ngIf="rate.touched">
+                                                <span *ngIf="rate.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Batch Code <span class="text-danger">*</span></label>
+                                            <input type="text" name="BatchCode" id="" class="form-control"
+                                                [(ngModel)]="purchaseItemObj.batchCode" required #batch="ngModel">
+                                            <div class="text-danger" *ngIf="batch.touched">
+                                                <span *ngIf="batch.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <button class="btn btn-sm btn-success" (click)="onAdd()">Add Data</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="col-md-12" *ngIf="!isTable">
+                                        <table class="table table-bordered">
+                                            <thead class="bg-secondary text-white">
+                                                <tr>
+                                                    <th>Expiry Date</th>
+                                                    <th>Item Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Rate Received</th>
+                                                    <th>Batch Code</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let data of purchaseObj.purchaseItemMasters">
+                                                    <td>{{data.expiryDate}}</td>
+                                                    <td>{{getItemName(data.itemId)}}</td>
+                                                    <td>{{data.quantity}}</td>
+                                                    <td>{{data.rateReceived}}</td>
+                                                    <td>{{data.batchCode}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn btn-sm btn-success me-4" (click)="onSave()"
+                    [disabled]="!form.form.valid">Save</button>
+                <button class="btn btn-sm btn-danger" (click)="onClose()">Back</button>
+            </div>
+        </div>
+    </div>
+</div>

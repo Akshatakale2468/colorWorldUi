@@ -1,0 +1,69 @@
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Customer Account Ledger</h4>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="">Select Customer <span class="text-danger">*</span></label>
+                        <select name="customer" id="" class="form-control" [(ngModel)]="ledgerObj.id">
+                            <option value="" *ngFor="let data of customerList" [value]="data.customerId">
+                                {{data.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <button class="btn btn-sm btn-success" (click)="onGetLedger(ledgerObj.id)">Get Ledger</button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Credit Amt.</th>
+                                    <th>Debit Amt.</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="ledgerArray.length == 0">
+                                <tr>
+                                    <td colspan="6" class="text-center"><b>No Record Found</b></td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="ledgerArray.length !== 0">
+                                <tbody>
+                                    <tr *ngFor="let data of ledgerArray; let no=index"
+                                        [ngClass]="data.type == 'Credit'? 'credit-row': 'debit-row' ">
+                                        <td>{{no+1}}</td>
+                                        <td>{{data.date | date: 'dd-MMM-yy'}}</td>
+                                        <td>{{data.type}}</td>
+                                        <td>{{data.description}}</td>
+                                        <td class="text-center">{{data.creditAmt | currency : 'INR'}}</td>
+                                        <td class="text-center">{{data.debit_amount | currency : 'INR'}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end"><b>Total</b></td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                </tfoot>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

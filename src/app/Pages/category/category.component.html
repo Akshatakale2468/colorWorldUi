@@ -1,0 +1,86 @@
+<div class="row mt-2">
+    <div [ngClass]="isForm ? 'col-md-12' : 'col-md-8' ">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Category</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAdd()">Add Category</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="categoryArray.length == 0">
+                                <tr>
+                                    <td colspan="2" class="text-center">No Record Found</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="categoryArray.length !==0">
+                                <tbody>
+                                    <tr *ngFor="let data of categoryArray; let no=index">
+                                        <td>{{no+1}}</td>
+                                        <td>{{data.categoryName | titlecase}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary me-2"
+                                                (click)="onEdit(data.categoryId)">Edit</button>
+                                            <button class="btn btn-sm btn-danger"
+                                                (click)="onDelete(data.categoryId,categoryObj)">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Category</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form #frm="ngForm">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Category Name <span class="text-danger">*</span></label>
+                            <input type="text" name="categoryName" id="" class="form-control"
+                                [(ngModel)]="categoryObj.categoryName" required #catName="ngModel">
+                            <div class="text-danger" *ngIf="catName.touched">
+                                <span *ngIf="catName.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-primary me-2" (click)="onSave()" [disabled]="!frm.form.valid"
+                    *ngIf="isSave">Save</button>
+                <button class="btn btn-sm btn-primary me-2" (click)="onUpdate(categoryObj)"
+                    *ngIf="!isSave">Update</button>
+                <button class="btn btn-sm btn-danger" (click)="onReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

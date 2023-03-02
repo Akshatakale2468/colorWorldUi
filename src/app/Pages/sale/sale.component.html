@@ -1,0 +1,273 @@
+<div class="row mt-2">
+    <div class="col-md-12" *ngIf="isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Sale</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAdd()">Add Sale</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Sale Date</th>
+                                    <th>Total Invoice Amt.</th>
+                                    <th>Total Items</th>
+                                    <th>Invoice No.</th>
+                                    <th>Naration</th>
+                                    <th>Customer Name</th>
+                                    <th>Mobile No.</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of saleArray; let no=index">
+                                    <td>{{no+1}}</td>
+                                    <td>{{data.saleDate | date: "dd-MMM-yy"}}</td>
+                                    <td>{{data.totalInvoiceAmt | currency :'INR'}}</td>
+                                    <td>{{data.totalItems}}</td>
+                                    <td>{{data.invoiceNo}}</td>
+                                    <td>{{data.naration | titlecase}}</td>
+                                    <td>{{data.customerName | titlecase}}</td>
+                                    <td>{{data.mobileNo}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary me-2"
+                                            (click)="onOpen(data.saleId)">Open</button>
+                                        <button class="btn btn-sm btn-danger"
+                                            (click)="onDelete(data.saleId,saleObj)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header  bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Sale</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <form #form="ngForm">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="">Mobile No.<span class="text-danger">*</span></label>
+                                            <input type="text" name="MobileNo" id="" class="form-control"
+                                                [(ngModel)]="saleObj.mobileNo" required #mbNo="ngModel" minlength="10" (blur)="onMobileBlur(saleObj.mobileNo)">
+                                            <div class="text-danger" *ngIf="mbNo.touched">
+                                                <span *ngIf="mbNo.errors?.['required']">This field is required</span>
+                                                <span *ngIf="mbNo.errors?.['minlength']">Min 10 no. required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Name <span class="text-danger">*</span></label>
+                                            <input type="text" name="Name" id="" class="form-control"
+                                                [(ngModel)]="saleObj.name" required #name="ngModel">
+                                            <div class="text-danger" *ngIf="name.touched">
+                                                <span *ngIf="name.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Alt Mobile No.</label>
+                                            <input type="text" name="AltMobNo" id="" class="form-control"
+                                                [(ngModel)]="saleObj.altMobNo">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="">Aadhar No.<span class="text-danger">*</span></label>
+                                            <input type="text" name="AadharNo" id="" class="form-control"
+                                                [(ngModel)]="saleObj.aadharNo" required #aadhar="ngModel" minlength="12"
+                                                maxlength="12">
+                                            <div class="text-danger" *ngIf="aadhar.touched">
+                                                <span *ngIf="aadhar.errors?.['required']">This field is required</span>
+                                                <span *ngIf="aadhar.errors?.['minlength']">Min 12 no. required</span>
+                                                <span *ngIf="aadhar.errors?.['maxlength']">Min 12 no. required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">City <span class="text-danger">*</span></label>
+                                            <input type="text" name="City" id="" class="form-control"
+                                                [(ngModel)]="saleObj.city" required #city="ngModel">
+                                            <div class="text-danger" *ngIf="city.touched">
+                                                <span *ngIf="city.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Address <span class="text-danger">*</span></label>
+                                            <textarea name="Address" id="" rows="2" class="form-control"
+                                                [(ngModel)]="saleObj.address" required #address="ngModel"></textarea>
+                                            <div class="text-danger" *ngIf="address.touched">
+                                                <span *ngIf="address.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="">Sale Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="SaleDate" id="" class="form-control"
+                                                [(ngModel)]="saleObj.saleDate" required #saleDate="ngModel">
+                                            <div class="text-danger" *ngIf="saleDate.touched">
+                                                <span *ngIf="saleDate.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Naration</label>
+                                            <input type="text" name="Naration" id="" class="form-control"
+                                                [(ngModel)]="saleObj.naration">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Total Items <span class="text-danger">*</span></label>
+                                            <input type="text" name="TotalItems" id="" class="form-control" disabled
+                                                [(ngModel)]="saleObj.totalItems" required #totalItem="ngModel">
+                                            <div class="text-danger" *ngIf="totalItem.touched">
+                                                <span *ngIf="totalItem.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">Total Invoice Amt. <span class="text-danger">*</span></label>
+                                            <input type="text" name="TotalInvoiceAmt" id="" class="form-control"
+                                                [(ngModel)]="saleObj.totalInvoiceAmt" required #invoiceAmt="ngModel">
+                                            <div class="text-danger" *ngIf="invoiceAmt.touched">
+                                                <span *ngIf="invoiceAmt.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="">Discount<span class="text-danger">*</span></label>
+                                            <input type="text" name="Discount" id="" class="form-control"
+                                                [(ngModel)]="saleObj.discount" required #Discount="ngModel"
+                                                (blur)="onBill()">
+                                            <div class="text-danger" *ngIf="Discount.touched">
+                                                <span *ngIf="Discount.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="">Total Bill Amt.</label>
+                                            <input type="text" name="outStandingAmount" id="" class="form-control"
+                                                disabled [(ngModel)]="saleObj.outStandingAmount">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="">Advance Paid</label>
+                                            <input type="text" name="advancePaid" class="form-control"
+                                                [(ngModel)]="saleObj.advancePaid">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="">Invoice No.</label>
+                                                <input type="text" name="invoiceNo" id="" class="form-control"
+                                                    [(ngModel)]="saleObj.invoiceNo">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="">Refrence</label>
+                                                <input type="text" name="Refrence" id="" class="form-control"
+                                                    [(ngModel)]="saleObj.refrence">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row" *ngIf="isShow">
+                                    <div class="col-md-4">
+                                        <label for="">Select Item </label>
+                                        <select name="selectItem" id="" class="form-control"
+                                            [(ngModel)]="saleItemObj.itemId" (ngModelChange)="onStockCheck()">
+                                            <option value="" *ngFor="let data of itemList" [value]="data.itemId">
+                                                {{data.itemName}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Available Quantity</label>
+                                        <input type="text" name="A.quantity" id="" class="form-control"
+                                            [value]="availabelQuantity" disabled>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="">Quantity <span class="text-danger">*</span></label>
+                                            <input type="text" name="quantity" id="" class="form-control"
+                                                [(ngModel)]="saleItemObj.quantity" required #quantity="ngModel"
+                                                (blur)="onCheckQuantity()">
+                                            <div class="text-danger" *ngIf="quantity.touched">
+                                                <span *ngIf="quantity.errors?.['required']">This field is
+                                                    required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Rate <span class="text-danger">*</span></label>
+                                            <input type="text" name="rate" id="" class="form-control"
+                                                [(ngModel)]="saleItemObj.rate" required #Rate="ngModel">
+                                            <div class="text-danger" *ngIf="Rate.touched">
+                                                <span *ngIf="Rate.errors?.['required']">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <button class="btn btn-sm btn-success" (click)="onAddData()">Add
+                                                Data</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mt-3" *ngIf="!isTable">
+                                        <table class="table table-bordered">
+                                            <thead class="bg-secondary">
+                                                <tr>
+                                                    <th>Item Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let data of saleObj.saleItemMasters">
+                                                    <td>{{getItemName(data.itemId)}}</td>
+                                                    <td>{{data.quantity}}</td>
+                                                    <td>{{data.rate}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn btn-sm btn-success me-3" (click)="onSave()"
+                    [disabled]="!form.form.valid">Save</button>
+                <button class="btn btn-sm btn-danger" (click)="onClose()">Back</button>
+            </div>
+        </div>
+    </div>
+</div>

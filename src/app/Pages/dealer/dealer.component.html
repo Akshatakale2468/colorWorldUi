@@ -1,0 +1,173 @@
+<div class="row mt-2">
+    <div [ngClass]="isForm ? 'col-md-12' : 'col-md-8' ">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Dealer</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAdd()">Add Dealer</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Dealer Name</th>
+                                    <th>City</th>
+                                    <th>Contact No.</th>
+                                    <th>GST No.</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="dealerArray.length == 0">
+                                <tr>
+                                    <td colspan="6" class="text-center">No Record Found</td>
+                                </tr>
+                            </ng-container>
+                           <ng-container *ngIf="dealerArray.length !==0">
+                            <tbody>
+                                <tr *ngFor="let data of dealerArray; let no=index">
+                                    <td>{{no+1}}</td>
+                                    <td>{{data.dealerName | titlecase}}</td>
+                                    <td>{{data.city | titlecase}}</td>
+                                    <td>{{data.contactNo}}</td>
+                                    <td>{{data.gstNo}}</td>
+                                    <td>{{data.address | titlecase}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary me-2"
+                                            (click)="onEdit(data.dealerId)">Edit</button>
+                                        <button class="btn btn-sm btn-danger"
+                                            (click)="onDelete(data.dealerId,dealerObj)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                           </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Dealer</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form #frm="ngForm">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Dealer Name <span class="text-danger">*</span></label>
+                            <input type="text" name="dealerName" id="" class="form-control"
+                                [(ngModel)]="dealerObj.dealerName" required #dealerName="ngModel">
+                            <div class="text-danger" *ngIf="dealerName.touched">
+                                <span *ngIf="dealerName.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Contact No. <span class="text-danger">*</span></label>
+                            <input type="text" name="contactNo" id="" class="form-control"
+                                [(ngModel)]="dealerObj.contactNo" required #contNo="ngModel" minlength="10">
+                            <div class="text-danger" *ngIf="contNo.touched">
+                                <span *ngIf="contNo.errors?.['required']">This field is required</span>
+                                <span *ngIf="contNo.errors?.['minlength']">Min 10 no. required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Alt Contact No.</label>
+                            <input type="text" name="" id="" class="form-control" [(ngModel)]="dealerObj.altContactNo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">GST No.<span class="text-danger">*</span></label>
+                            <input type="text" name="gstNo" id="" class="form-control" [(ngModel)]="dealerObj.gstNo" required
+                                #gstNo="ngModel">
+                            <div class="text-danger" *ngIf="gstNo.touched">
+                                <span *ngIf="gstNo.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Bank Account No.<span class="text-danger">*</span></label>
+                            <input type="text" name="bankAccNo" id="" class="form-control" [(ngModel)]="dealerObj.bankAccNo"
+                                required #bankAccNo="ngModel">
+                            <div class="text-danger" *ngIf="bankAccNo.touched">
+                                <span *ngIf="bankAccNo.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Bank Name <span class="text-danger">*</span></label>
+                            <input type="text" name="bankName" id="" class="form-control" [(ngModel)]="dealerObj.bankName"
+                                required #bankName="ngModel">
+                            <div class="text-danger" *ngIf="bankName.touched">
+                                <span *ngIf="bankName.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">IFSC Code <span class="text-danger">*</span></label>
+                            <input type="text" name="ifsc" id="" class="form-control" [(ngModel)]="dealerObj.ifsc" required
+                                #ifsc="ngModel">
+                            <div class="text-danger" *ngIf="ifsc.touched">
+                                <span *ngIf="ifsc.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Branch Name <span class="text-danger">*</span></label>
+                            <input type="text" name="branch" id="" class="form-control" [(ngModel)]="dealerObj.branch"
+                                required #branch="ngModel">
+                            <div class="text-danger" *ngIf="branch.touched">
+                                <span *ngIf="branch.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">City <span class="text-danger">*</span></label>
+                            <input type="text" name="city" id="" class="form-control" [(ngModel)]="dealerObj.city"
+                                required #city="ngModel">
+                            <div class="text-danger" *ngIf="city.touched">
+                                <span *ngIf="city.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Address <span class="text-danger">*</span></label>
+                            <textarea name="address" id="" rows="2" class="form-control" [(ngModel)]="dealerObj.address"
+                                required #address="ngModel"></textarea>
+                            <div class="text-danger" *ngIf="address.touched">
+                                <span *ngIf="address.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-primary me-2" (click)="onSave()" *ngIf="isSave"
+                    [disabled]="!frm.form.valid">Save</button>
+                <button class="btn btn-sm btn-primary me-2" (click)="onUpdate(dealerObj)"
+                    *ngIf="!isSave">Update</button>
+                <button class="btn btn-sm btn-danger" (click)="onReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

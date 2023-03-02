@@ -1,0 +1,128 @@
+<div class="row mt-2">
+    <div [ngClass]="isForm ? 'col-md-12' : 'col-md-8' ">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Receipt</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAdd()">Add Receipt</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Customer Name</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Mode</th>
+                                    <th>Bill No.</th>
+                                    <th>Naration</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="receiptArray.length ==0">
+                                <tr>
+                                    <td colspan="7" class="text-center">No Record Found</td>
+                                </tr>
+                            </ng-container>
+                         <ng-container *ngIf="receiptArray.length !==0">
+                            <tbody>
+                                <tr *ngFor="let data of receiptArray; let no=index">
+                                    <td>{{no+1}}</td>
+                                    <td>{{data.customerName | titlecase}}</td>
+                                    <td>{{data.saleDate | date: "dd-MMM-yy"}}</td>
+                                    <td>{{data.amount | currency : 'INR'}}</td>
+                                    <td>{{data.paymentMode}}</td>
+                                    <td>{{data.billNo}}</td>
+                                    <td>{{data.naration | titlecase}}</td>
+                                </tr>
+                            </tbody>
+                         </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Receipt</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form #form="ngForm">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Select Customer <span class="text-danger">*</span></label>
+                            <select name="customer" id="" [(ngModel)]="receiptObj.customerId" class="form-control">
+                                <option value="" *ngFor="let data of customerList" [value]="data.customerId">
+                                    {{data.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Payment Date <span class="text-danger">*</span></label>
+                            <input type="date" name="paymentDate" id="" class="form-control" [(ngModel)]="receiptObj.paymentDate"
+                                required #paymentDate="ngModel">
+                            <div class="text-danger" *ngIf="paymentDate.touched">
+                                <span *ngIf="paymentDate.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Amount <span class="text-danger">*</span></label>
+                            <input type="text" name="amount" id="" class="form-control" [(ngModel)]="receiptObj.amount"
+                                required #amount="ngModel">
+                            <div class="text-danger" *ngIf="amount.touched">
+                                <span *ngIf="amount.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Payment Mode <span class="text-danger">*</span></label>
+                            <input type="text" name="paymentMode" id="" class="form-control" [(ngModel)]="receiptObj.paymentMode"
+                                required #paymentMode="ngModel">
+                            <div class="text-danger" *ngIf="paymentMode.touched">
+                                <span *ngIf="paymentMode.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Bill No. <span class="text-danger">*</span></label>
+                            <input type="text" name="billNo" id="" class="form-control" [(ngModel)]="receiptObj.billNo"
+                                required #billNo="ngModel">
+                            <div class="text-danger" *ngIf="billNo.touched">
+                                <span *ngIf="billNo.errors?.['required']">This field is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Naration <span class="text-danger">*</span></label>
+                            <textarea name="Naration" id="" rows="3" class="form-control"
+                                [(ngModel)]="receiptObj.naration"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <button class=" btn btn-sm btn-success me-3" (click)="onSave()" [disabled]="!form.form.valid">Save</button>
+                <button class=" btn btn-sm btn-danger" (click)="onReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

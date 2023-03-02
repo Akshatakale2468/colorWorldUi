@@ -1,0 +1,157 @@
+<div class="row mt-2">
+    <div [ngClass]="isForm ? 'col-md-12' : 'col-md-8' ">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Customer</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onAdd()">Add Customer</button>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Name</th>
+                                    <th>Mobile No.</th>
+                                    <th>Alt Mobile No.</th>
+                                    <th>Aadhar No.</th>
+                                    <th>City</th>
+                                    <th>Address</th>
+                                    <th>Is Dealer</th>
+                                    <th>GST No.</th>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="customerArray.length == 0">
+                                <tr>
+                                    <td colspan="9" class="text-center">No Record Found</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="customerArray.length !==0">
+                                <tbody>
+                                    <tr *ngFor="let data of customerArray; let no=index">
+                                        <td>{{no+1}}</td>
+                                        <td>{{data.name | titlecase}}</td>
+                                        <td>{{data.mobileNo}}</td>
+                                        <td>{{data.altMobNo}}</td>
+                                        <td>{{data.aadharNo}}</td>
+                                        <td>{{data.city | titlecase}}</td>
+                                        <td>{{data.address | titlecase}}</td>
+                                        <td>{{data.isDealer}}</td>
+                                        <td>{{data.gstNo}}</td>
+                                    </tr>
+                                </tbody>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="!isForm">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Add Customer</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-sm btn-success float-end" (click)="onClose()">Close</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form #form="ngForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="Name" id="" class="form-control" [(ngModel)]="customerObj.name"
+                                required #name="ngModel">
+                            <div class="text-danger" *ngIf="name.touched">
+                                <span *ngIf="name.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Aadhar No. <span class="text-danger">*</span></label>
+                            <input type="text" name="aadharNo" id="" class="form-control"
+                                [(ngModel)]="customerObj.aadharNo" required #aadharNo="ngModel" minlength="12" maxlength="12">
+                            <div class="text-danger" *ngIf="aadharNo.touched">
+                                <span *ngIf="aadharNo.errors?.['required']">This is required</span>
+                                <span *ngIf="aadharNo.errors?.['minlength']">Min. 12 no. required</span>
+                                <span *ngIf="aadharNo.errors?.['maxlength']">Max 12 no. required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Mobile No. <span class="text-danger">*</span></label>
+                            <input type="text" name="mobileNo" id="" class="form-control"
+                                [(ngModel)]="customerObj.mobileNo" required #mobileNo="ngModel" minlength="10">
+                            <div class="text-danger" *ngIf="mobileNo.touched">
+                                <span *ngIf="mobileNo.errors?.['required']">This is required</span>
+                                <span *ngIf="mobileNo.errors?.['minlength']">Min 10 no.required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Alt Mobile No. <span class="text-danger">*</span></label>
+                            <input type="text" name="altMobNo" id="" class="form-control"
+                                [(ngModel)]="customerObj.altMobNo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Is Dealer</label>
+                            <input type="checkbox" name="" id="">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">GST No. <span class="text-danger">*</span></label>
+                            <input type="text" name="gstNo" id="" class="form-control" [(ngModel)]="customerObj.gstNo"
+                                required #gstNo="ngModel">
+                            <div class="text-danger" *ngIf="gstNo.touched">
+                                <span *ngIf="gstNo.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Refrence<span class="text-danger">*</span></label>
+                            <input type="text" name="refrence" id="" class="form-control"
+                                [(ngModel)]="customerObj.refrence" required #refrence="ngModel">
+                            <div class="text-danger" *ngIf="refrence.touched">
+                                <span *ngIf="refrence.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Address <span class="text-danger">*</span></label>
+                            <textarea name="address" id="" class="form-control" rows="2"
+                                [(ngModel)]="customerObj.address" required #address="ngModel"></textarea>
+                            <div class="text-danger" *ngIf="address.touched">
+                                <span *ngIf="address.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">City<span class="text-danger">*</span></label>
+                            <input type="text" name="city" id="" class="form-control" [(ngModel)]="customerObj.city"
+                                required #city="ngModel">
+                            <div class="text-danger" *ngIf="city.touched">
+                                <span *ngIf="city.errors?.['required']">This is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-success me-3" (click)="onSave()"
+                    [disabled]="!form.form.valid">Save</button>
+                <button class="btn btn-sm btn-danger" (click)="onReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

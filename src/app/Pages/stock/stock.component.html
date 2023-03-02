@@ -1,0 +1,40 @@
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Stock</h4>
+                    </div>
+                </div>
+            </div>
+            <app-loader *ngIf="isLoading"></app-loader>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Item Name</th>
+                                    <th>Created Date</th>
+                                    <th>Last Update Date</th>
+                                    <th>Quatity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of stockArray; let no=index">
+                                    <td>{{no+1}}</td>
+                                    <td>{{data.itemName | titlecase}}</td>
+                                    <td>{{data.createdDate | date: "dd-MMM-yy"}}</td>
+                                    <td>{{data.lastUpdateDate | date: "dd-MMM-yy"}}</td>
+                                    <td>{{data.quatity}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
